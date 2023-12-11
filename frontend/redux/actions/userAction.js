@@ -79,6 +79,7 @@ export const logout = () => async (dispatch) => {
 }
 
 export const register = (formData) => async (dispatch) => {
+    console.log(formData);
     try {
         dispatch({
             type: "registerRequest",
@@ -88,7 +89,7 @@ export const register = (formData) => async (dispatch) => {
         // Axios
         await axios.post(`${server}/api/v1/user/new`, formData, {
             headers: {
-                "Content-Type": "multipart/form-data"
+                "Content-Type": "application/json"
             },
             "withCredentials": true
         })

@@ -20,11 +20,11 @@ const Register = () => {
     }
 
     const handleSignUp = () => {
-        const myForm = new FormData();
-        myForm.append("name", name)
-        myForm.append("email", text)
-        myForm.append("password", password)
-        dispatch(register(myForm));
+        // const myForm = new FormData();
+        // myForm.append("name", name)
+        // myForm.append("email", text)
+        // myForm.append("password", password)
+        dispatch(register({ name, email: text, password }));
     }
     return (
 

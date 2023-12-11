@@ -19,7 +19,7 @@ app.use(express.json())
 app.use(cors({
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
-
+    origin: ["https://smart-homie.onrender.com"]
 }
 ))
 app.use(cookieParser());
