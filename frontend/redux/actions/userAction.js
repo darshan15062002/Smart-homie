@@ -1,7 +1,8 @@
 import axios from "axios"
 import { server } from "../store"
 
-export const login = (email, password) => async (dispatch) => {
+export const login = (text, password) => async (dispatch) => {
+    console.log(text, password);
     try {
         dispatch({
             type: "loginRequest",
@@ -10,7 +11,7 @@ export const login = (email, password) => async (dispatch) => {
 
         // Axios
         await axios.post(`${server}/api/v1/user/login`, {
-            email, password
+            email: text, password
         }, {
             headers: {
                 "Content-Type": "application/json"
@@ -23,6 +24,7 @@ export const login = (email, password) => async (dispatch) => {
             payload: "Welcome Back"
         })
     } catch (error) {
+        console.log(error);
         dispatch({
             type: "loginFailed",
             payload: error.response.data.message
@@ -87,16 +89,17 @@ export const register = (formData) => async (dispatch) => {
         })
 
         // Axios
-        await axios.post(`${server}/api/v1/user/new`, formData, {
+        const { data } = await axios.post(`${server}/api/v1/user/new`, formData, {
             headers: {
                 "Content-Type": "application/json"
             },
             "withCredentials": true
         })
+        console.log(data);
 
         dispatch({
             type: "registerSuccess",
-            payload: "Welcome Back"
+            payload: data.message || "register successfully"
         })
     } catch (error) {
         console.log(error);

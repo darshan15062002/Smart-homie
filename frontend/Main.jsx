@@ -10,6 +10,8 @@ import Register from './screens/Register'
 import Start from './screens/Start'
 import { useDispatch } from 'react-redux'
 import { loadUser } from './redux/actions/userAction'
+import Profile from './screens/Profile'
+import AddDevice from './screens/AddDevice'
 
 
 const main = () => {
@@ -31,6 +33,8 @@ const main = () => {
                     <Stack.Screen name='home' component={Home} />
                     <Stack.Screen name='login' component={Login} />
                     <Stack.Screen name='register' component={Register} />
+                    <Stack.Screen name='profile' component={Profile} />
+                    <Stack.Screen name='adddevice' component={AddDevice} />
 
 
 

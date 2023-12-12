@@ -1,82 +1,80 @@
-import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import { color, defaultstyling } from '../styles/style'
 import Header from '../components/Header'
 
-import { Button, TextInput } from 'react-native-paper'
+import { Avatar, Button } from 'react-native-paper'
+
+
+import { useDispatch, useSelector } from 'react-redux'
+import { useMessageAndError } from '../utils/hooks/useMessageAndError'
 import { useNavigation } from '@react-navigation/native'
-import WebView from 'react-native-webview'
 
-const videos = [{
-    name: '9th Geometry maths-2 MAHA IMP  second semester exam annual exam Maharashtra board #exam2023',
-    imgUrl: 'https://i9.ytimg.com/vi_webp/yW7sqTxdFNM/mqdefault.webp?v=642bb636&sqp=COzZr6EG&rs=AOn4CLB5i9Jg--_dsGv2w4jOqr_EXbGhTQ',
-    Url: 'https://youtu.be/yW7sqTxdFNM'
 
-}, {
-    name: '9th Geometry maths-2 MAHA IMP  second semester exam annual exam Maharashtra board #exam2023',
-    imgUrl: 'https://i9.ytimg.com/vi_webp/yW7sqTxdFNM/mqdefault.webp?v=642bb636&sqp=COzZr6EG&rs=AOn4CLB5i9Jg--_dsGv2w4jOqr_EXbGhTQ',
-    Url: 'https://youtu.be/yW7sqTxdFNM'
 
-}, {
-    name: '9th Geometry maths-2 MAHA IMP  second semester exam annual exam Maharashtra board #exam2023',
-    imgUrl: 'https://i9.ytimg.com/vi_webp/yW7sqTxdFNM/mqdefault.webp?v=642bb636&sqp=COzZr6EG&rs=AOn4CLB5i9Jg--_dsGv2w4jOqr_EXbGhTQ',
-    Url: 'https://youtu.be/yW7sqTxdFNM'
 
-}, {
-    name: '9th Geometry maths-2 MAHA IMP  second semester exam annual exam Maharashtra board #exam2023',
-    imgUrl: 'https://i9.ytimg.com/vi_webp/yW7sqTxdFNM/mqdefault.webp?v=642bb636&sqp=COzZr6EG&rs=AOn4CLB5i9Jg--_dsGv2w4jOqr_EXbGhTQ',
-    Url: 'https://youtu.be/yW7sqTxdFNM'
-
-}, {
-    name: '9th Geometry maths-2 MAHA IMP  second semester exam annual exam Maharashtra board #exam2023',
-    imgUrl: 'https://i9.ytimg.com/vi_webp/yW7sqTxdFNM/mqdefault.webp?v=642bb636&sqp=COzZr6EG&rs=AOn4CLB5i9Jg--_dsGv2w4jOqr_EXbGhTQ',
-    Url: 'https://youtu.be/yW7sqTxdFNM'
-
-}]
-
-const Home = () => {
-    const [active, setActive] = useState('Science')
-    const [text, setText] = useState("");
+const Home = ({ navigation }) => {
+    const [active, setActive] = useState(false)
     const navigate = useNavigation()
-    const std = ['Science', 'Algebra', 'Geometry', 'History', 'Geography', 'English']
-    const handleStd = (id) => {
-        setActive(id)
-        console.log(id);
-    }
+    const { user } = useSelector((state) => state.user)
+    const dispatch = useDispatch()
+
+    const loading = useMessageAndError(navigation, dispatch, "login")
 
     return (
         <View style={defaultstyling}>
             <Header />
-            <View style={{ flexDirection: 'row', height: 100, marginTop: 50 }}>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ alignItems: 'center' }} >
-                    {std.map((item, index) => (
-                        <Button style={{ backgroundColor: active == item ? 'blue' : color.color5, borderRadius: 100, margin: 5, top: 5 }} onPress={() => handleStd(item)} >
-                            <Text style={{ fontSize: 15, color: active == item ? 'white' : 'blue', fontWeight: '900' }} key={item}>
-                                {item}
-                            </Text>
-                        </Button>
-                    ))}
+            <View style={styles.headerContainer}>
+                <Text style={styles.headerText}>
+                    {user?.name}
+                </Text>
+                <Text style={styles.headerText2}>
+                    {user?.email}
+                </Text>
 
+            </View>
 
+            <View style={styles.headingContainer2}>
+                <Text style={{
+                    fontSize: 24, color: '#E9B430', fontWeight: '900'
+                }}>My</Text>
+                <Text style={{
+                    fontSize: 24,
+                    fontWeight: '900',
+                    fontFamily: 'Roboto'
+                }}>Home</Text>
+            </View>
 
-                </ScrollView>
+            <View style={{ ...styles.headingContainer2, justifyContent: 'space-around', marginTop: 10 }}>
+                <Button onPress={() => setActive(false)}>
+                    <Text style={{
+                        fontSize: 18, color: '#E9B430', fontWeight: '900', borderBottomWidth: 2, borderBottomColor: '#E9B430'
+                    }}>Devices</Text>
+                </Button>
+                <Button onPress={() => setActive(true)} >
+                    <Text
+                        onPress={() => setActive(true)}
+                        style={{
+                            fontSize: 18,
+                            fontWeight: '900',
+                            fontFamily: 'Roboto',
+                            color: 'black',
+                        }}>Add More</Text>
+                </Button>
             </View>
             <View style={{ flex: 1, width: '100%' }}>
-                <ScrollView showsVerticalScrollIndicator={false} style={{ top: 10, backgroundColor: 'white' }}>
-                    {videos.map((item, index) => (
-                        <TouchableOpacity style={{ padding: 10, elevation: 12, }}>
-                            <Image source={{ uri: item.imgUrl }}
-                                style={{ width: '100%', height: 200, borderRadius: 10 }}
-                            />
-                            <WebView
 
-                                source={{ uri: item.Url }}
-                            />
-                            <Text>{item.name}</Text>
-                        </TouchableOpacity>))}
+                {active ? (
+                    <View style={{ display: 'flex', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        <TouchableOpacity onPress={() => navigate.navigate('adddevice')}   >
+                            <Avatar.Icon icon={'plus'} color={color.color3} size={200} style={{ backgroundColor: color.color4, borderWidth: 2, borderRadius: 100, borderColor: '#E9B430' }} />
+                        </TouchableOpacity>
+                    </View>
+                ) : (<ScrollView showsVerticalScrollIndicator={false}>
 
-                </ScrollView>
 
+                </ScrollView>)
+                }
             </View>
 
 
@@ -85,5 +83,35 @@ const Home = () => {
         </View>
     )
 }
+const styles = StyleSheet.create({
+    headerContainer: {
+
+        backgroundColor: '#E9B430',
+        height: 100,
+        justifyContent: 'center',
+        alignItems: 'start',
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        marginTop: 50,
+        borderRadius: 30,
+    },
+    headerText: {
+        fontSize: 20,
+        fontWeight: '700'
+
+    },
+    headerText2: {
+        fontSize: 20,
+        fontWeight: '400'
+
+    },
+    headingContainer2: {
+        flexDirection: 'row',
+
+        gap: 10,
+        top: 20,
+        justifyContent: 'center',
+    }
+})
 
 export default Home

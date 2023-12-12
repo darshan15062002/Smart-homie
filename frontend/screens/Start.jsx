@@ -4,11 +4,20 @@ import { defaultstyling } from '../styles/style'
 import Header from '../components/Header'
 import ideabg1 from '../assets/ideabg1.png'
 import { useNavigation } from '@react-navigation/native'
+import { useSelector } from 'react-redux'
 
 const Start = () => {
     const navigate = useNavigation()
+    const { user } = useSelector((state) => state.user)
+
     const handleStart = () => {
-        navigate.navigate('login')
+        if (user) {
+            navigate.navigate('home')
+        }
+        else {
+            navigate.navigate('login')
+        }
+
     }
     return (
         <View style={styles.container}>

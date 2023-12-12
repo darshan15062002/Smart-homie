@@ -6,7 +6,8 @@ import { color, defaultstyling } from '../styles/style';
 import ideabg3 from '../assets/ideabg3.png'
 import { useDispatch } from 'react-redux'
 import { register } from '../redux/actions/userAction';
-const Register = () => {
+import { useMessageAndError } from '../utils/hooks/useMessageAndError';
+const Register = ({ navigation, route }) => {
     const navigate = useNavigation()
     const dispatch = useDispatch()
     const [text, setText] = useState("");
@@ -26,6 +27,9 @@ const Register = () => {
         // myForm.append("password", password)
         dispatch(register({ name, email: text, password }));
     }
+
+    const loading = useMessageAndError(navigation, dispatch, "home");
+
     return (
 
         <View style={defaultstyling}>
@@ -74,14 +78,14 @@ const Register = () => {
                     value={password}
                     onChangeText={password => setPassword(password)}
                 />
-                <Button style={styles.button} onPress={handleSignUp} uppercase textColor='white'>
+                <Button style={styles.button} onPress={handleSignUp} disabled={!name || !text || !password} uppercase textColor='white'>
                     <Text style={{
                         fontWeight: '700',
                         fontSize: 20
                     }}>Register</Text>
                 </Button>
                 <View style={{ alignItems: 'flex-start' }}>
-                    <Button onPress={() => navigate.navigate('login')}> I am already Registered</Button>
+                    <Button loading={loading} onPress={() => navigate.navigate('login')}> I am already Registered</Button>
                 </View>
             </ScrollView>
 

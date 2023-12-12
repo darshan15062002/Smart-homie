@@ -3,12 +3,14 @@ import React, { useState } from 'react'
 import { Avatar } from 'react-native-paper'
 import { color } from '../styles/style'
 import { useNavigation } from '@react-navigation/native'
+import { useSelector } from 'react-redux'
 
-const Header = ({ currentUser = false }) => {
-    const [show, setShow] = useState(false)
+const Header = () => {
+
     const navigate = useNavigation()
+    const { user } = useSelector((state) => state.user)
     const handleLogin = () => {
-        currentUser ? setShow(true) : navigate.navigate('login')
+        user ? navigate.navigate('profile') : navigate.navigate('login')
     }
     return (
         <View style={{ height: 50 }}>
@@ -23,7 +25,7 @@ const Header = ({ currentUser = false }) => {
                 }}>Homie</Text>
             </View>
             <TouchableOpacity style={{ position: 'absolute', right: 5, top: 20, zIndex: 100, }} onPress={handleLogin} >
-                <Avatar.Icon icon={currentUser ? "account" : "login"} color={color.color3} style={{ backgroundColor: color.color4 }} />
+                <Avatar.Icon icon={user ? "account" : "login"} color={color.color3} style={{ backgroundColor: color.color4 }} />
             </TouchableOpacity>
         </View>
     )

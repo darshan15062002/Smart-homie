@@ -6,6 +6,8 @@ import cors from 'cors'
 
 
 import user from './server/routes/user.js'
+import device from './server/routes/device.js'
+
 // import product from './server/routes/product.js'
 // import order from './server/routes/order.js'
 
@@ -29,6 +31,7 @@ app.get("/", (req, res, next) => {
     res.send("working")
 })
 app.use("/api/v1/user", user)
+app.use("/api/v1/device", device)
 
 
 

@@ -4,14 +4,27 @@ import { color, defaultstyling } from '../styles/style'
 import { useNavigation } from '@react-navigation/native'
 import { Avatar, Button, TextInput } from 'react-native-paper'
 import ideabg2 from '../assets/ideabg2.png'
+import { login } from '../redux/actions/userAction'
+import { useDispatch } from 'react-redux'
+import { useMessageAndError } from '../utils/hooks/useMessageAndError'
 const Login = () => {
     const navigate = useNavigation()
     const [text, setText] = useState("");
     const [password, setPassword] = useState("");
+    const dispatch = useDispatch()
+
+    const loading = useMessageAndError(navigate, dispatch, "home")
 
     const handleBack = () => {
-        navigate.navigate('home')
+
+        navigate.navigate('start')
     }
+    const submitHandler = () => {
+        console.log("login");
+        dispatch(login(text, password))
+
+    }
+
     return (
 
 
@@ -56,7 +69,7 @@ const Login = () => {
                     value={password}
                     onChangeText={password => setPassword(password)}
                 />
-                <Button style={styles.button} uppercase textColor='white'>
+                <Button loading={loading} style={styles.button} onPress={submitHandler} uppercase textColor='white'>
                     <Text style={{
                         fontWeight: '700',
                         fontSize: 20
