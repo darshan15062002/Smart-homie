@@ -40,7 +40,7 @@ export const useMessageAndError = (navigate, dispatch, navigateTo = 'login') => 
 }
 
 export const useMessageAndErrorOther = (dispatch, navigate, navigateTo, func) => {
-    const { loading, message, error } = useSelector((state) => state.updateUser)
+    const { loading, message, error } = useSelector((state) => state.otherState)
     console.log(loading, message, error);
     useEffect(() => {
         if (error) {

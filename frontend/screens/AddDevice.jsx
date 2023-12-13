@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, ScrollView, StyleSheet } from 'react-native';
-import { Avatar, Button } from 'react-native-paper';
+import { Avatar, Button, Switch } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 // import { createOutput } from '../utils/api'; // Adjust the import based on your API structure
-import { useMessageAndError } from '../utils/hooks/useMessageAndError';
+import { useMessageAndError, useMessageAndErrorOther } from '../utils/hooks/useMessageAndError';
 import { defaultstyling } from '../styles/style';
 import Header from '../components/Header';
+import { createDevices } from '../redux/actions/otherAction';
 
 const AddDevice = () => {
     const navigate = useNavigation();
@@ -15,23 +16,16 @@ const AddDevice = () => {
     const [deviceName, setDeviceName] = useState('');
     const [board, setBoard] = useState('');
     const [gpio, setGpio] = useState('');
-    const [state, setState] = useState('');
+    const [state, setState] = useState(false);
 
-    const handleBack = () => {
-        navigate.goBack();
-    };
 
     const handleAddDevice = async () => {
-        // try {
-        //     // Call your API function to create a new output/device
-        //     await createOutput(deviceName, board, gpio, state);
-        //     // Handle success, e.g., show a success message or navigate to another screen
-        //     console.log('Device added successfully');
-        // } catch (error) {
-        //     // Handle error, e.g., show an error message
-        //     console.error('Error adding device:', error.message);
-        // }
+        console.log("add device");
+        dispatch(createDevices(deviceName, board, gpio, state))
     };
+
+    const loading = useMessageAndErrorOther(dispatch, navigate, 'home')
+    console.log(loading);
 
     return (
         <View style={defaultstyling}>
@@ -59,13 +53,14 @@ const AddDevice = () => {
                     onChangeText={setGpio}
                     style={styles.input}
                 />
-                <TextInput
-                    label="State"
-                    placeholder="Enter state"
-                    value={state}
-                    onChangeText={setState}
-                    style={styles.input}
-                />
+                <View style={styles.switchContainer}>
+                    <Text style={styles.switchLabel}>State</Text>
+                    <Switch
+                        value={state}
+                        onValueChange={(value) => setState(value)}
+                        color="#E9B430"
+                    />
+                </View>
                 <Button mode="contained" style={styles.addButton} onPress={handleAddDevice} disabled={!deviceName || !board || !gpio || !state}>
                     <Text style={{
                         fontWeight: '700',
@@ -113,6 +108,21 @@ const styles = StyleSheet.create({
         backgroundColor: '#E9B430',
         paddingHorizontal: 10,
         paddingVertical: 5,
+    },
+    switchContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+
+    switchLabel: {
+        flex: 1,
+        fontSize: 18,
+        color: '#333',
+    },
+
+    switch: {
+        transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }], // Increase the size of the switch
     },
 });
 
