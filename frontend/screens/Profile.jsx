@@ -2,16 +2,18 @@ import { View, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView } from
 import React from 'react'
 import { color, defaultstyling } from '../styles/style'
 import { Avatar } from 'react-native-paper'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
 
     BarChart,
 
 } from "react-native-chart-kit";
 import { useNavigation } from '@react-navigation/native'
+import { logout } from '../redux/actions/userAction'
+import { useMessageAndError } from '../utils/hooks/useMessageAndError'
 const screenWidth = Dimensions.get("screen").width - 60
 const Profile = () => {
-
+    const dispatch = useDispatch()
     const navigate = useNavigation()
     const { user } = useSelector((state) => state.user)
     const handleBack = () => {
@@ -41,6 +43,7 @@ const Profile = () => {
             },
         ],
     };
+    const loading = useMessageAndError(dispatch, navigate)
 
 
     const logoutHandler = () => {

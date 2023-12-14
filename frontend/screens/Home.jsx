@@ -8,7 +8,7 @@ import { Avatar, Button, Card, IconButton, Modal, Paragraph, Portal, Provider, S
 
 import { useDispatch, useSelector } from 'react-redux'
 import { useMessageAndError, useMessageAndErrorOther } from '../utils/hooks/useMessageAndError'
-import { useNavigation } from '@react-navigation/native'
+import { useIsFocused, useNavigation } from '@react-navigation/native'
 import { deleteDevice, loadDevice, updateDevice } from '../redux/actions/otherAction'
 
 
@@ -18,7 +18,7 @@ const Home = ({ navigation }) => {
     const [active, setActive] = useState(false)
     const [selectedDevice, setSelectedDevice] = useState(null); // To store the device selected for deletion
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-
+    const isFocused = useIsFocused()
     const navigate = useNavigation()
 
     const { user } = useSelector((state) => state.user)
@@ -27,15 +27,16 @@ const Home = ({ navigation }) => {
 
 
 
-    const handleUpdateDevice = async (id, state) => {
-        console.log(id, state);
-        await dispatch(updateDevice(id, state))
-        await dispatch(loadDevice())
+    const handleUpdateDevice = (id, state) => {
+
+        dispatch(updateDevice(id, state))
+        dispatch(loadDevice())
     }
 
     const handleDeleteDevice = (device) => {
         setSelectedDevice(device);
         setDeleteModalVisible(true);
+        dispatch(loadDevice)
     };
 
     const confirmDelete = () => {
@@ -49,9 +50,10 @@ const Home = ({ navigation }) => {
 
 
     useEffect(() => {
-        dispatch(loadDevice())
-        setActive(false)
-    }, [navigation])
+        isFocused && dispatch(loadDevice())
+        isFocused && setActive(false)
+
+    }, [dispatch, isFocused, useNavigation]);
     return (
         <Provider>
             <View style={defaultstyling}>
@@ -105,11 +107,11 @@ const Home = ({ navigation }) => {
                         </View>
                     ) : (<ScrollView showsVerticalScrollIndicator={false} >
                         <View style={{
-                            marginTop: 20,
+                            marginTop: 25,
                             paddingHorizontal: 20,
                             display: "flex",
                             gap: 5,
-                            paddingVertical: 20
+                            paddingVertical: 25
                         }}>
 
                             {devices?.map((device, index) => (

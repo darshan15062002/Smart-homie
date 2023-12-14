@@ -78,14 +78,14 @@ const Register = ({ navigation, route }) => {
                     value={password}
                     onChangeText={password => setPassword(password)}
                 />
-                <Button style={styles.button} onPress={handleSignUp} disabled={!name || !text || !password} uppercase textColor='white'>
+                <Button loading={loading} style={styles.button} onPress={handleSignUp} disabled={!name || !text || !password} uppercase textColor='white'>
                     <Text style={{
                         fontWeight: '700',
                         fontSize: 20
                     }}>Register</Text>
                 </Button>
                 <View style={{ alignItems: 'flex-start' }}>
-                    <Button loading={loading} onPress={() => navigate.navigate('login')}> I am already Registered</Button>
+                    <Button onPress={() => navigate.navigate('login')}> I am already Registered</Button>
                 </View>
             </ScrollView>
 
