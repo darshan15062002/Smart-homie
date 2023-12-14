@@ -1,12 +1,28 @@
 import { asyncError } from "../middleware/error.js";
 import { Device } from "../model/device.js";
-
+import ErrorHandler from "../utils/error.js";
+import { getDataUri } from "../utils/features.js";
+import cloudinary from "cloudinary";
 export const createDevices = asyncError(async (req, res, next) => {
-    console.log(req.user._id, "createDevices");
+
     const userId = req?.user?._id
     const { name, board, gpio, state } = req.body;
 
+    let image = undefined;
+    if (req.file) {
+        const file = getDataUri(req.file);
+        const myCloud = await cloudinary.v2.uploader.upload(file.content);
+        image = {
+            public_id: myCloud.public_id,
+            imgUrl: myCloud.secure_url,
+        };
+
+    }
+
+
+
     await Device.create({
+        image,
         name,
         board,
         gpio,

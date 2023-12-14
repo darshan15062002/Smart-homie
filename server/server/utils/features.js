@@ -1,8 +1,14 @@
 
-
+import DataUriParser from "datauri/parser.js";
+import path from "path";
 import { asyncError } from "../middleware/error.js";
 
 
+export const getDataUri = (file) => {
+    const parser = new DataUriParser();
+    const extName = path.extname(file.originalname).toString();
+    return parser.format(extName, file.buffer);
+};
 
 export const sendToken = asyncError(async (user, res, statusCode, message) => {
     const token = await user.generateToken()

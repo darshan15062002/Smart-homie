@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const schema = new mongoose.Schema({
-
+    image: { public_id: String, imgUrl: String },
     name: {
         type: String,
         required: true
