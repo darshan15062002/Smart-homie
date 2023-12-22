@@ -85,6 +85,9 @@ export const turnOnRoom = asyncError(async (req, res, next) => {
         await Device.findByIdAndUpdate(device, { state });
     })
 
+    room.state = state;
+    await Room.save()
+
     res.status(200).json({ success: true, message: 'Output state updated successfully' });
 })
 
@@ -98,3 +101,27 @@ export const getAllRooms = asyncError(async (req, res, next) => {
     });
 
 })
+
+export const deleteRoom = asyncError(async (req, res, next) => {
+    const id = req.params.id;
+
+
+    const room = await Room.findById(id);
+    if (!room) {
+        return next(new ErrorResponse(`Room not found with id `, 404));
+    }
+
+    if (room.image && room.image.public_id) {
+        await cloudinary.v2.uploader.destroy(room.image.public_id);
+    }
+
+
+
+    // Delete the room
+    await Room.findByIdAndDelete(id)
+
+    res.status(200).json({
+        success: true,
+        message: 'Room deleted successfully',
+    });
+});

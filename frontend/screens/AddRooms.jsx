@@ -14,11 +14,15 @@ import * as ImagePicker from 'expo-image-picker';
 
 
 
-import { Card } from 'react-native-paper';
+import { Button, Card } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadDevice } from '../redux/actions/otherAction';
+import { createDevices, createRoom, loadDevice } from '../redux/actions/otherAction';
 
 import DropDownPicker from 'react-native-dropdown-picker';
+import { useMessageAndErrorOther } from '../utils/hooks/useMessageAndError';
+import { useNavigation } from '@react-navigation/native';
+import { Mime } from 'mime';
+import mime from 'mime';
 
 const dummyImage = 'https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/home-improvement/wp-content/uploads/2022/07/featured-image-kitchen-layouts.jpg'
 const AddRooms = () => {
@@ -32,7 +36,7 @@ const AddRooms = () => {
     const [open, setOpen] = useState(false);
     const [selectedDevice, setSelectedDevice] = useState(null);
     const dispatch = useDispatch()
-
+    const navigate = useNavigation()
 
     useEffect(() => {
         (async () => {
@@ -71,7 +75,7 @@ const AddRooms = () => {
         addDeviceToRoom()
     }, [selectedDevice])
 
-
+    const loading = useMessageAndErrorOther(dispatch, navigate, 'home')
 
     const removeDeviceFromRoom = (index) => {
         const updatedDevices = [...devicess];
@@ -80,13 +84,35 @@ const AddRooms = () => {
     };
 
     const submitForm = () => {
-        // Handle submission logic here
-        console.log('Room Image:', roomImage);
-        console.log('Room Name:', roomName);
+        console.log("click");
+        const myForm = new FormData();
 
-        console.log('Devices:', devices.map(device => device._id));
+        // Append the roomName
+        myForm.append("name", roomName);
 
+        // Append each device ID to the devices array
+        devices.forEach(device => {
+            myForm.append("devices[]", device._id);
+        });
+
+        // Append the image if it exists
+        if (roomImage !== "") {
+            myForm.append("file", {
+                uri: roomImage,
+                type: mime.getType(roomImage),
+                name: roomImage?.split("/").pop(),
+            });
+
+            // Dispatch the action to create the device
+            dispatch(createRoom(myForm));
+        } else {
+            Toast.show({
+                type: "error",
+                text1: "Please select the Image of your device",
+            });
+        }
     };
+
 
 
 
@@ -170,15 +196,23 @@ const AddRooms = () => {
 
 
                 </View>
-                <TouchableOpacity style={styles.submitButton} onPress={submitForm}>
-                    <Text style={styles.submitButtonText}>Submit</Text>
-                </TouchableOpacity>
+                <Button loading={loading} style={styles.addButton} onPress={submitForm} disabled={loading}>
+                    <Text style={{
+                        fontWeight: '700',
+                        fontSize: 20,
+                        color: 'white'
+                    }}>
+                        Submit
+                    </Text>
+                </Button>
+
             </View>
         </View >
     );
 };
 
 const styles = StyleSheet.create({
+
     pickerItemText: {
         color: 'red', // or any color you prefer
     },
@@ -284,7 +318,7 @@ const styles = StyleSheet.create({
     addButton: {
         backgroundColor: '#E9B430',
         borderRadius: 8,
-        marginLeft: 10,
+        marginTop: 30,
         padding: 10,
     },
     addButtonText: {

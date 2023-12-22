@@ -12,6 +12,10 @@ const schema = new mongoose.Schema({
             required: true
         }
     ],
+    state: {
+        type: Boolean,
+        default: true
+    },
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User', // Reference to the User model

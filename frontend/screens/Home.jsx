@@ -6,7 +6,7 @@ import { Avatar, Button, Card, IconButton, Modal, Paragraph, Portal, Provider, S
 import { useDispatch, useSelector } from 'react-redux'
 import { useMessageAndError, useMessageAndErrorOther } from '../utils/hooks/useMessageAndError'
 import { useIsFocused, useNavigation } from '@react-navigation/native'
-import { deleteDevice, loadDevice, updateDevice } from '../redux/actions/otherAction'
+import { deleteDevice, loadDevice, loadRoom, turnOnRoom, updateDevice } from '../redux/actions/otherAction'
 
 import WeatherCard from '../components/WeatherCard'
 import DeviceCard from '../components/DeviceCard'
@@ -20,7 +20,7 @@ const Home = () => {
     const [selectedDevice, setSelectedDevice] = useState(null); // To store the device selected for deletion
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
     const isFocused = useIsFocused()
-    const { user } = useSelector((state) => state.user)
+    const { rooms } = useSelector((state) => state.otherState)
     const navigate = useNavigation()
     const { devices } = useSelector((state) => state.otherState)
     const dispatch = useDispatch()
@@ -48,23 +48,18 @@ const Home = () => {
         }
     };
 
-    // const fetchWeather = async (latitude, longitude) => {
-    //     try {
-    //         const apiKey = 'dc99b3ce453067ba78956c8e01a2a44f';
-    //         const response = await axios.get(
-    //             `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`
-    //         );
-    //         setWeather(response.data);
-    //     } catch (error) {
-    //         console.error('Error fetching weather:', error);
-    //     }
-    // };
+    const handleUpdateRoom = (id, state) => {
+        console.log(id, state);
+        dispatch(turnOnRoom(id, state));
+        dispatch(loadRoom())
+    };
+
 
 
 
 
     useEffect(() => {
-
+        isFocused && dispatch(loadRoom());
         isFocused && dispatch(loadDevice())
 
 
@@ -134,9 +129,9 @@ const Home = () => {
 
                     ) : (<ScrollView showsVerticalScrollIndicator={false} >
                         <View style={styles.cardContainer}>
-                            {devices?.map((device, index) => (
+                            {rooms?.map((device, index) => (
                                 <>
-                                    <DeviceCard device={device} id={device._id} handleDeleteDevice={handleDeleteDevice} handleUpdateDevice={handleUpdateDevice} />
+                                    <DeviceCard device={device} id={device._id} handleDeleteDevice={() => { }} handleUpdateDevice={handleUpdateRoom} />
 
                                 </>
                             ))}

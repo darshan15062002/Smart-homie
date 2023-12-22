@@ -11,6 +11,16 @@ export const otherReducer = createReducer({}, (builder) => {
         state.loading = true
     }).addCase("deleteDeviceRequest", (state) => {
         state.loading = true
+    }).addCase("createRoomRequest", (state) => {
+        state.loading = true;
+    }).addCase("updateRoomRequest", (state) => {
+        state.loading = true;
+    }).addCase("deleteRoomRequest", (state) => {
+        state.loading = true;
+    }).addCase("loadRoomRequest", (state) => {
+        state.loading = true;
+    }).addCase("turnOnRoomRequest", (state) => {
+        state.loading = true;
     })
 
     builder.addCase("loadDeviceSuccess", (state, action) => {
@@ -28,6 +38,21 @@ export const otherReducer = createReducer({}, (builder) => {
     }).addCase("deleteDeviceSuccess", (state, action) => {
         state.loading = false
         state.message = action.payload
+    }).addCase("createRoomSuccess", (state, action) => {
+        state.loading = false;
+        state.message = action.payload;
+    }).addCase("updateRoomSuccess", (state, action) => {
+        state.loading = false;
+        state.message = action.payload;
+    }).addCase("deleteRoomSuccess", (state, action) => {
+        state.loading = false;
+        state.message = action.payload;
+    }).addCase("loadRoomSuccess", (state, action) => {
+        state.loading = false;
+        state.rooms = action.payload;
+    }).addCase("turnOnRoomSuccess", (state, action) => {
+        state.loading = false;
+        state.message = action.payload;
     })
 
 
@@ -51,7 +76,24 @@ export const otherReducer = createReducer({}, (builder) => {
         state.loading = false
         state.error = action.payload
 
+    }).addCase("createRoomFail", (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
     })
+        .addCase("updateRoomFail", (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        })
+        .addCase("deleteRoomFail", (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        }).addCase("loadRoomFail", (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        }).addCase("turnOnRoomFail", (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        });
 
 
 
