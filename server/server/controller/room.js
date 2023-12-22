@@ -86,9 +86,9 @@ export const turnOnRoom = asyncError(async (req, res, next) => {
     })
 
     room.state = state;
-    await Room.save()
+    const resp = await room.save()
 
-    res.status(200).json({ success: true, message: 'Output state updated successfully' });
+    res.status(200).json({ success: true, resp, message: 'Output state updated successfully' });
 })
 
 export const getAllRooms = asyncError(async (req, res, next) => {

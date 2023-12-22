@@ -14,7 +14,7 @@ const schema = new mongoose.Schema({
     ],
     state: {
         type: Boolean,
-        default: true
+        default: false
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
