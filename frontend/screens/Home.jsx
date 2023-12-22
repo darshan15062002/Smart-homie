@@ -1,27 +1,27 @@
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { color, defaultstyling } from '../styles/style'
 import Header from '../components/Header'
-
 import { Avatar, Button, Card, IconButton, Modal, Paragraph, Portal, Provider, Switch, Title } from 'react-native-paper'
-
-
 import { useDispatch, useSelector } from 'react-redux'
 import { useMessageAndError, useMessageAndErrorOther } from '../utils/hooks/useMessageAndError'
 import { useIsFocused, useNavigation } from '@react-navigation/native'
 import { deleteDevice, loadDevice, updateDevice } from '../redux/actions/otherAction'
 
+import WeatherCard from '../components/WeatherCard'
+import DeviceCard from '../components/DeviceCard'
 
 
 
-const Home = ({ navigation }) => {
+
+
+const Home = () => {
     const [active, setActive] = useState(false)
     const [selectedDevice, setSelectedDevice] = useState(null); // To store the device selected for deletion
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
     const isFocused = useIsFocused()
-    const navigate = useNavigation()
-
     const { user } = useSelector((state) => state.user)
+    const navigate = useNavigation()
     const { devices } = useSelector((state) => state.otherState)
     const dispatch = useDispatch()
 
@@ -36,7 +36,7 @@ const Home = ({ navigation }) => {
     const handleDeleteDevice = (device) => {
         setSelectedDevice(device);
         setDeleteModalVisible(true);
-        dispatch(loadDevice)
+        dispatch(loadDevice())
     };
 
     const confirmDelete = () => {
@@ -48,10 +48,26 @@ const Home = ({ navigation }) => {
         }
     };
 
+    // const fetchWeather = async (latitude, longitude) => {
+    //     try {
+    //         const apiKey = 'dc99b3ce453067ba78956c8e01a2a44f';
+    //         const response = await axios.get(
+    //             `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`
+    //         );
+    //         setWeather(response.data);
+    //     } catch (error) {
+    //         console.error('Error fetching weather:', error);
+    //     }
+    // };
+
+
+
 
     useEffect(() => {
+
         isFocused && dispatch(loadDevice())
-        isFocused && setActive(false)
+
+
 
     }, [dispatch, isFocused, useNavigation]);
     return (
@@ -59,15 +75,9 @@ const Home = ({ navigation }) => {
             <View style={defaultstyling}>
 
                 <Header />
-                <View style={styles.headerContainer}>
-                    <Text style={styles.headerText}>
-                        {user?.name}
-                    </Text>
-                    <Text style={styles.headerText2}>
-                        {user?.email}
-                    </Text>
 
-                </View>
+                <WeatherCard />
+
 
                 <View style={styles.headingContainer2}>
                     <Text style={{
@@ -80,11 +90,11 @@ const Home = ({ navigation }) => {
                     }}>Home</Text>
                 </View>
 
-                <View style={{ ...styles.headingContainer2, justifyContent: 'space-around', marginTop: 10 }}>
-                    <Button onPress={() => setActive(false)}>
+                <View style={{ ...styles.headingContainer2, justifyContent: 'space-around', marginVertical: 10 }}>
+                    <Button onPress={() => setActive(false)} >
                         <Text style={{
-                            fontSize: 18, color: '#E9B430', fontWeight: '900', borderBottomWidth: 2, borderBottomColor: '#E9B430'
-                        }}>Devices</Text>
+                            fontSize: 18, color: `${!active ? '#E9B430' : 'black'}`, fontWeight: '900',
+                        }}>Rooms</Text>
                     </Button>
                     <Button onPress={() => setActive(true)} >
                         <Text
@@ -93,63 +103,60 @@ const Home = ({ navigation }) => {
                                 fontSize: 18,
                                 fontWeight: '900',
                                 fontFamily: 'Roboto',
-                                color: 'black',
-                            }}>Add More</Text>
+                                color: `${active ? '#E9B430' : 'black'}`,
+                            }}>Devices</Text>
                     </Button>
                 </View>
                 <View style={{ flex: 1, width: '100%' }}>
 
                     {active ? (
-                        <View style={{ display: 'flex', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                            <TouchableOpacity onPress={() => navigate.navigate('adddevice')}   >
-                                <Avatar.Icon icon={'plus'} color={color.color3} size={200} style={{ backgroundColor: color.color4, borderWidth: 2, borderRadius: 100, borderColor: '#E9B430' }} />
-                            </TouchableOpacity>
-                        </View>
+
+                        <ScrollView showsVerticalScrollIndicator={false} >
+                            <View style={styles.cardContainer}>
+                                {devices?.map((device, index) => (
+
+                                    <DeviceCard device={device} id={device._id} handleDeleteDevice={handleDeleteDevice} handleUpdateDevice={handleUpdateDevice} />
+
+                                ))}
+                                <View style={styles.card} key={"cnlbkhvmvdas"}>
+
+                                    <TouchableOpacity onPress={() => navigate.navigate('adddevice')}  >
+                                        <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                            <Text style={{ color: 'gray', fontWeight: '800', marginBottom: 10 }}>Add Devices</Text>
+                                            <Avatar.Icon icon={'plus'} color={color.color3} size={50} style={{ backgroundColor: color.color4, borderWidth: 2, borderRadius: 100, borderColor: '#E9B430' }} />
+                                        </View>
+                                    </TouchableOpacity>
+
+                                </View>
+                            </View>
+
+                        </ScrollView>
+
                     ) : (<ScrollView showsVerticalScrollIndicator={false} >
-                        <View style={{
-                            marginTop: 25,
-                            paddingHorizontal: 20,
-                            display: "flex",
-                            gap: 5,
-                            paddingVertical: 25
-                        }}>
-
+                        <View style={styles.cardContainer}>
                             {devices?.map((device, index) => (
-                                <Card key={index} style={styles.card}>
-                                    <Card.Content>
-                                        <Title>{device.name}</Title>
-                                        <Paragraph>Connected at Pin: {device.gpio} | Board: {device.board}</Paragraph>
-                                        {/* You can add more information here */}
-                                    </Card.Content>
-                                    <Card.Actions>
-                                        <Text>Off</Text>
-                                        <Switch
-                                            value={device.state} // Assuming device.state represents the on/off state
-                                            onValueChange={(value) => handleUpdateDevice(device._id, value)}
-                                            color="#E9B430"
-                                        />
-                                        <Text>On</Text>
+                                <>
+                                    <DeviceCard device={device} id={device._id} handleDeleteDevice={handleDeleteDevice} handleUpdateDevice={handleUpdateDevice} />
 
+                                </>
+                            ))}
+                            <View style={styles.card} key={"adjkdbljbcflshds"}>
 
-                                    </Card.Actions>
-                                    <IconButton
-                                        icon="delete"
-                                        color="#E9B430"
-                                        style={{ position: 'absolute', top: 0, right: 5 }}
-                                        onPress={() => handleDeleteDevice(device)}
-                                    />
-                                </Card>
-                            ))
+                                <TouchableOpacity onPress={() => navigate.navigate('addrooms')}  >
+                                    <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        <Text style={{ color: 'gray', fontWeight: '800', marginBottom: 10 }}>Add Places</Text>
+                                        <Avatar.Icon icon={'plus'} color={color.color3} size={50} style={{ backgroundColor: color.color4, borderWidth: 2, borderRadius: 100, borderColor: '#E9B430' }} />
+                                    </View>
+                                </TouchableOpacity>
 
-                            }
+                            </View>
                         </View>
 
                     </ScrollView>
 
-                    )
-                    }
+                    )}
                 </View>
-                {/* Confirmation modal */}
+
 
                 <Portal>
                     <Modal
@@ -173,8 +180,16 @@ const Home = ({ navigation }) => {
     )
 }
 const styles = StyleSheet.create({
+    cardContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+        marginBottom: 10,
+        paddingHorizontal: 5,
+        paddingVertical: 10, // Add padding to the container
+        marginTop: 10,
+    },
     headerContainer: {
-
         backgroundColor: '#E9B430',
         height: 100,
         justifyContent: 'center',
@@ -187,27 +202,18 @@ const styles = StyleSheet.create({
     headerText: {
         fontSize: 20,
         fontWeight: '700'
-
     },
     headerText2: {
         fontSize: 20,
         fontWeight: '400'
-
     },
     headingContainer2: {
         flexDirection: 'row',
-
         gap: 10,
         top: 20,
         justifyContent: 'center',
     },
-    card: {
-        margin: 10,
-        padding: 10,
-        backgroundColor: '#fff', // Card background color
-        borderRadius: 10,
-        elevation: 3, // Card shadow
-    },
+
     modalContainer: {
         backgroundColor: 'white',
         padding: 20,
@@ -227,6 +233,19 @@ const styles = StyleSheet.create({
         borderColor: '#E9B430',
         borderWidth: 1,
     },
+    card: {
+        margin: 0,
+        padding: 0,
+        height: 130,
+        width: '47%', // Adjust width to leave some space between cards
+        marginBottom: 10,
+        display: 'flex',
+
+        justifyContent: 'center',
+        alignItems: 'center', backgroundColor: '#F2F1EB',
+        elevation: 3,
+        borderRadius: 0
+    }
 
 })
 

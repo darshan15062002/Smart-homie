@@ -9,7 +9,7 @@ import { loadUser } from "../../redux/actions/userAction"
 
 export const useMessageAndError = (navigate, dispatch, navigateTo = 'login') => {
     const { loading, message, error } = useSelector((state) => state.user)
-    console.log(loading, message, error);
+
     useEffect(() => {
         if (error) {
             Toast.show({
@@ -41,7 +41,7 @@ export const useMessageAndError = (navigate, dispatch, navigateTo = 'login') => 
 
 export const useMessageAndErrorOther = (dispatch, navigate, navigateTo, func) => {
     const { loading, message, error } = useSelector((state) => state.otherState)
-    console.log(loading, message, error);
+
     useEffect(() => {
         if (error) {
             Toast.show({

@@ -12,6 +12,7 @@ import { useDispatch } from 'react-redux'
 import { loadUser } from './redux/actions/userAction'
 import Profile from './screens/Profile'
 import AddDevice from './screens/AddDevice'
+import AddRooms from './screens/AddRooms'
 
 
 const main = () => {
@@ -35,7 +36,7 @@ const main = () => {
                     <Stack.Screen name='register' component={Register} />
                     <Stack.Screen name='profile' component={Profile} />
                     <Stack.Screen name='adddevice' component={AddDevice} />
-
+                    <Stack.Screen name='addrooms' component={AddRooms} />
 
 
                 </Stack.Group>

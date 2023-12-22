@@ -43,7 +43,7 @@ const Profile = () => {
             },
         ],
     };
-    const loading = useMessageAndError(dispatch, navigate)
+    const loading = useMessageAndError(dispatch, navigate,)
 
 
     const logoutHandler = () => {

@@ -74,6 +74,9 @@ export const deleteOutput = asyncError(async (req, res) => {
     if (!output || output.user.toString() !== userId.toString()) {
         return res.status(403).json({ message: 'Unauthorized access' });
     }
+
+    await cloudinary.v2.uploader.destroy(product.images.public_id);
+
     await Device.findByIdAndDelete(id);
 
     res.status(200).json({ success: true, message: 'Board deleted successfully' });

@@ -1,18 +1,18 @@
 import axios from "axios"
 import { server } from "../store";
 
-export const createDevices = (name, board, gpio, state) => async (dispatch) => {
-    console.log(name, board, gpio, state);
-    state = true
+export const createDevices = (formData) => async (dispatch) => {
+
+
     try {
         dispatch({
             type: 'addDeviceRequest',
         })
 
-        const res = await axios.post(`${server}/api/v1/device/create`, { name, board, gpio, state },
+        const res = await axios.post(`${server}/api/v1/device/create`, formData,
             {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "multipart/form-data"
                 },
                 "withCredentials": true
             }

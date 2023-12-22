@@ -8,8 +8,9 @@ import { useMessageAndErrorOther } from '../utils/hooks/useMessageAndError';
 import { color, defaultstyling } from '../styles/style';
 import Header from '../components/Header';
 import { createDevices } from '../redux/actions/otherAction';
-
-
+import * as ImagePicker from 'expo-image-picker'
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
+import mime from 'mime'
 const AddDevice = () => {
     const navigate = useNavigation();
     const dispatch = useDispatch();
@@ -20,9 +21,29 @@ const AddDevice = () => {
     const [state, setState] = useState(false);
 
     const defaultImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwaGDpoZoEXXKCsAZ2E1AbPaBIz9_qK5CCp9liXx1nv7eEMDu9Na8WiaR1tg&s'
+
     const handleAddDevice = async () => {
-        console.log("add device");
-        dispatch(createDevices(deviceName, board, gpio, state))
+
+        const myForm = new FormData();
+        myForm.append("name", deviceName)
+        myForm.append("board", board)
+        myForm.append("gpio", gpio)
+        myForm.append("state", state)
+
+        if (image !== "") {
+            myForm.append("file", {
+                uri: image,
+                type: mime.getType(image),
+                name: image?.split("/").pop(),
+            })
+            dispatch(createDevices(myForm))
+        } else {
+            Toast.show({
+                type: "error",
+                text1: "Please select the Image of your device"
+            })
+        }
+
     };
 
     const loading = useMessageAndErrorOther(dispatch, navigate, 'home')
@@ -84,7 +105,7 @@ const AddDevice = () => {
                         color="#E9B430"
                     />
                 </View>
-                <Button mode="contained" style={styles.addButton} onPress={handleAddDevice} disabled={!deviceName || !board || !gpio || !state}>
+                <Button loading={loading} mode="contained" style={styles.addButton} onPress={handleAddDevice} disabled={!deviceName || !board || !gpio || !state}>
                     <Text style={{
                         fontWeight: '700',
                         fontSize: 20,
@@ -120,7 +141,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#E9B430',
     },
     scrollContainer: {
-        top: 60,
+        top: 30,
         gap: 10,
         shadowColor: 'black',
         width: '100%',
