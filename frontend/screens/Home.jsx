@@ -49,9 +49,10 @@ const Home = () => {
     };
 
     const handleUpdateRoom = (id, state) => {
-        console.log(id, state);
+
         dispatch(turnOnRoom(id, state));
         dispatch(loadRoom())
+        dispatch(loadDevice())
     };
 
 
@@ -106,32 +107,34 @@ const Home = () => {
 
                     {active ? (
 
-                        <ScrollView showsVerticalScrollIndicator={false} >
+                        <ScrollView showsVerticalScrollIndicator={false}>
                             <View style={styles.cardContainer}>
-                                {devices?.map((device, index) => (
-
-                                    <DeviceCard device={device} id={device._id} handleDeleteDevice={handleDeleteDevice} handleUpdateDevice={handleUpdateDevice} />
-
+                                {devices?.map((device) => (
+                                    <DeviceCard
+                                        key={device._id}  // Assuming device._id is a unique identifier
+                                        device={device}
+                                        id={device._id}
+                                        handleDeleteDevice={handleDeleteDevice}
+                                        handleUpdateDevice={handleUpdateDevice}
+                                    />
                                 ))}
                                 <View style={styles.card} key={"cnlbkhvmvdas"}>
-
-                                    <TouchableOpacity onPress={() => navigate.navigate('adddevice')}  >
+                                    <TouchableOpacity onPress={() => navigate.navigate('adddevice')}>
                                         <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                             <Text style={{ color: 'gray', fontWeight: '800', marginBottom: 10 }}>Add Devices</Text>
                                             <Avatar.Icon icon={'plus'} color={color.color3} size={50} style={{ backgroundColor: color.color4, borderWidth: 2, borderRadius: 100, borderColor: '#E9B430' }} />
                                         </View>
                                     </TouchableOpacity>
-
                                 </View>
                             </View>
-
                         </ScrollView>
+
 
                     ) : (<ScrollView showsVerticalScrollIndicator={false} >
                         <View style={styles.cardContainer}>
                             {rooms?.map((device, index) => (
                                 <>
-                                    <DeviceCard device={device} id={device._id} handleDeleteDevice={() => { }} handleUpdateDevice={handleUpdateRoom} />
+                                    <DeviceCard device={device} key={device._id} id={device._id} handleDeleteDevice={() => { }} handleUpdateDevice={handleUpdateRoom} />
 
                                 </>
                             ))}
