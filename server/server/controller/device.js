@@ -85,6 +85,7 @@ export const deleteOutput = asyncError(async (req, res) => {
 export const getAllOutputStates = asyncError(async (req, res) => {
     const { board } = req.query;
 
+
     const outputs = await Device.find({ board });
     const rows = {};
     outputs.forEach((output) => {
