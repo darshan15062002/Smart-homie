@@ -7,7 +7,7 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -16,20 +16,15 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "android.package",
+      "versionCode": 1,
+      "package": "com.darshankumar.frontend",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "db13f772-2924-44f1-aa04-d494e24b3499"
-      }
-    },
-    "owner": "darshankumar"
+      "favicon": "./assets/icon.png"
+    }
   }
 }

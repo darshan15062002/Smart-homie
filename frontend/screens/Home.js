@@ -2,9 +2,9 @@ import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image } from 'rea
 import React, { useEffect, useState } from 'react'
 import { color, defaultstyling } from '../styles/style'
 import Header from '../components/Header'
-import { Avatar, Button, Card, IconButton, Modal, Paragraph, Portal, Provider, Switch, Title } from 'react-native-paper'
+import { Avatar, Button, Modal, Portal, Provider } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
-import { useMessageAndError, useMessageAndErrorOther } from '../utils/hooks/useMessageAndError'
+
 import { useIsFocused, useNavigation } from '@react-navigation/native'
 import { deleteDevice, loadDevice, loadRoom, turnOnRoom, updateDevice } from '../redux/actions/otherAction'
 
