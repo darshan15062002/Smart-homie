@@ -75,7 +75,7 @@ export const deleteOutput = asyncError(async (req, res) => {
         return res.status(403).json({ message: 'Unauthorized access' });
     }
 
-    await cloudinary.v2.uploader.destroy(output?.images?.public_id);
+    await cloudinary.v2.uploader.destroy(output?.image?.public_id);
 
     await Device.findByIdAndDelete(id);
 
